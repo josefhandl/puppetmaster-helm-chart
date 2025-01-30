@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: puppetserver
+spec:
+  selector:
+    matchLabels:
+      app: puppetserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: puppetserver
+    spec:
+      terminationGracePeriodSeconds: 180
+
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+
+      - name: server
+        image: hub.cerit.io/josef_handl/puppetserver:mk1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8140
+
+        securityContext:
+          privileged: false
+          runAsUser: 999
+          runAsGroup: 999
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        resources:
+          limits:
+            cpu: {{ .Values.instance.maxcpu }}
+            memory: {{ .Values.instance.maxram }}
+          requests:
+            cpu: {{ .Values.instance.mincpu }}
+            memory: {{ .Values.instance.minram }}
+
+      serviceAccountName: puppet-cert-saver-sa

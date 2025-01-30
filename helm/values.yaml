@@ -1,0 +1,6 @@
+instance:
+  maxcpu: "1"
+  maxram: "2Gi"
+  mincpu: "500m"
+  minram: "1Gi"
+

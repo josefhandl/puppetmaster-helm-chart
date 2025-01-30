@@ -39,7 +39,15 @@ RUN chown -R puppet:puppet /etc/puppetlabs \
 
 #RUN echo "playground-docker.internal" > /etc/hostname
 
-ENV PATH="/opt/puppetlabs/bin:${PATH}"
+RUN mkdir -p /opt/puppet-scripts/bin/
+
+COPY puppet-cert-saver.sh /opt/puppet-scripts/bin/puppet-cert-saver
+RUN chown -R puppet:puppet /opt/puppet-scripts
+
+ENV PATH="/opt/puppetlabs/bin:/opt/puppet-scripts/bin:${PATH}"
+
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+	&& install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
@@ -53,3 +61,4 @@ EXPOSE 8140
 
 # Set the entrypoint to start PuppetServer
 #ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["sleep", "infinity"]
