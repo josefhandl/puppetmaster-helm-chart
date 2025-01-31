@@ -44,4 +44,26 @@ spec:
             cpu: {{ .Values.instance.mincpu }}
             memory: {{ .Values.instance.minram }}
 
+        volumeMounts:
+#        - name: cert-volume
+#          mountPath: /etc/puppetlabs/puppetserver/ca
+        - name: puppet-cert-ca
+          mountPath: /opt/puppet-cert/ca
+          readOnly: true
+        - name: puppet-cert-signed
+          mountPath: /opt/puppet-cert/signed
+          readOnly: true
+
       serviceAccountName: puppet-cert-saver-sa
+
+      volumes:
+
+#      - name: cert-volume
+#        emptyDir: {}
+
+      - name: puppet-cert-ca
+        secret:
+          secretName: puppet-cert-ca-secret
+      - name: puppet-cert-signed
+        secret:
+          secretName: puppet-cert-signed-secret

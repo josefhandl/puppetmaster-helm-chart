@@ -60,5 +60,5 @@ EXPOSE 8140
 #USER puppet
 
 # Set the entrypoint to start PuppetServer
-#ENTRYPOINT ["/docker-entrypoint.sh"]
-ENTRYPOINT ["sleep", "infinity"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+#ENTRYPOINT ["sleep", "infinity"]

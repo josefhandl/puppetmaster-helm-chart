@@ -3,8 +3,8 @@
 set -e
 
 # Set variables
-SECRET_NAME_CA="puppet-ca-secret"
-SECRET_NAME_SIGNED="puppet-signed-secret"
+SECRET_NAME_CA="puppet-cert-ca-secret"
+SECRET_NAME_SIGNED="puppet-cert-signed-secret"
 
 NAMESPACE="puppet-ns"
 
