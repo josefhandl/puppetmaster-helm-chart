@@ -4,3 +4,6 @@ instance:
   mincpu: "500m"
   minram: "1Gi"
 
+server:
+  hostname: "playground"
+

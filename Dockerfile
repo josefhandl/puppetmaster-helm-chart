@@ -21,7 +21,9 @@ RUN apt update \
 	dnsutils \
 	ca-certificates \
 	openssl \
-	vim
+	vim \
+# Install `sponge` and `envsubst`
+	moreutils gettext
 
 RUN cd /tmp \
     && wget https://apt.puppet.com/puppet8-release-jammy.deb \

@@ -2,10 +2,20 @@
 
 set -e
 
-mkdir -p /etc/puppetlabs/puppetserver/ca/signed
+PUPPET_PATH="/etc/puppetlabs"
+PUPPET_CONFIG="${PUPPET_PATH}/puppet/puppet.conf"
 
-cp /opt/puppet-cert/ca/* /etc/puppetlabs/puppetserver/ca/
-cp /opt/puppet-cert/signed/* /etc/puppetlabs/puppetserver/ca/signed
+mkdir -p "${PUPPET_PATH}/puppetserver/ca/signed"
+
+# Substiture vars (set hostname) in puppet.conf file
+envsubst < "${PUPPET_PATH}/puppet/puppet.conf" | sponge "${PUPPET_PATH}/puppet/puppet.conf"
+
+if [ -z "$(ls -A /opt/puppet-cert/ca/)" ]; then
+    cp /opt/puppet-cert/ca/*     "${PUPPET_PATH}/puppetserver/ca/"
+    cp /opt/puppet-cert/signed/* "${PUPPET_PATH}/puppetserver/ca/signed"
+else
+    puppetserver ca setup --config "$PUPPET_CONFIG"
+fi
 
 sleep infinity
 

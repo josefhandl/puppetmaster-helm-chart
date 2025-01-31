@@ -19,6 +19,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
+      hostname: {{ .Values.server.hostname | quote }}
+
       containers:
 
       - name: server
@@ -26,6 +28,10 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8140
+
+        env:
+        - name: HOSTNAME
+          value: {{ .Values.server.hostname | quote }}
 
         securityContext:
           privileged: false
@@ -45,8 +51,6 @@ spec:
             memory: {{ .Values.instance.minram }}
 
         volumeMounts:
-#        - name: cert-volume
-#          mountPath: /etc/puppetlabs/puppetserver/ca
         - name: puppet-cert-ca
           mountPath: /opt/puppet-cert/ca
           readOnly: true
@@ -57,10 +61,6 @@ spec:
       serviceAccountName: puppet-cert-saver-sa
 
       volumes:
-
-#      - name: cert-volume
-#        emptyDir: {}
-
       - name: puppet-cert-ca
         secret:
           secretName: puppet-cert-ca-secret
