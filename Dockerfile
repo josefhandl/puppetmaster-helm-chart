@@ -10,20 +10,13 @@ RUN groupadd --gid 1000 ${USER} \
     && useradd --uid 1000 --create-home --home-dir ${USER_HOME} -s /bin/bash -g ${USER} ${USER} \
     && chown -R ${USER}:${USER} ${USER_HOME}
 
-RUN echo "root:a" | chpasswd \
-    && echo "${USER}:a" | chpasswd
-
-RUN apt update \
-    && apt install -y --no-install-recommends \
+RUN apt update && apt install -y --no-install-recommends \
 	wget \
 	curl \
-	bind9-utils \
-	dnsutils \
 	ca-certificates \
-	openssl \
-	vim \
 # Install `sponge` and `envsubst`
-	moreutils gettext
+	moreutils gettext \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp \
     && wget https://apt.puppet.com/puppet8-release-jammy.deb \
@@ -34,15 +27,11 @@ RUN cd /tmp \
 
 COPY production /etc/puppetlabs/code/environments/production
 
-# Ensure the PuppetServer directories have correct permissions
 RUN chown -R puppet:puppet /etc/puppetlabs \
     /var/log/puppetlabs \
     /opt/puppetlabs
 
-#RUN echo "playground-docker.internal" > /etc/hostname
-
 RUN mkdir -p /opt/puppet-scripts/bin/
-
 COPY puppet-cert-saver.sh /opt/puppet-scripts/bin/puppet-cert-saver
 RUN chown -R puppet:puppet /opt/puppet-scripts
 
@@ -56,11 +45,6 @@ RUN chmod +x /docker-entrypoint.sh
 
 COPY puppet.conf /etc/puppetlabs/puppet/
 
-# Expose the necessary port(s)
-EXPOSE 8140
+USER puppet
 
-#USER puppet
-
-# Set the entrypoint to start PuppetServer
 ENTRYPOINT ["/docker-entrypoint.sh"]
-#ENTRYPOINT ["sleep", "infinity"]
