@@ -5,5 +5,9 @@ instance:
   minram: "1Gi"
 
 server:
-  hostname: "playground"
+  image: "hub.cerit.io/josef_handl/puppetserver:mk2"
+  hostname: "puppetserver"
 
+db:
+  image: "hub.cerit.io/josef_handl/puppetdb:mk1"
+  hostname: "puppetdb"

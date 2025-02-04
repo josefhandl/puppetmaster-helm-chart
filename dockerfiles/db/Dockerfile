@@ -14,6 +14,8 @@ RUN apt update && apt install -y --no-install-recommends \
 	wget \
 	curl \
 	ca-certificates \
+# Install debug tools
+	bind9-utils nmap openssl dnsutils postgresql \
 # Install `sponge` and `envsubst`
 	moreutils gettext \
     && rm -rf /var/lib/apt/lists/*
@@ -22,29 +24,21 @@ RUN cd /tmp \
     && wget https://apt.puppet.com/puppet8-release-jammy.deb \
     && dpkg -i /tmp/puppet8-release-jammy.deb \
     && apt update \
-    && apt install -y puppetserver \
+    && apt install -y puppetdb \
     && rm /tmp/puppet8-release-jammy.deb
 
-COPY production /etc/puppetlabs/code/environments/production
+#RUN chown -R puppet:puppet /etc/puppetlabs \
+#    /var/log/puppetlabs \
+#    /opt/puppetlabs
 
-RUN chown -R puppet:puppet /etc/puppetlabs \
-    /var/log/puppetlabs \
-    /opt/puppetlabs
-
-RUN mkdir -p /opt/puppet-scripts/bin/
-COPY puppet-cert-saver.sh /opt/puppet-scripts/bin/puppet-cert-saver
-RUN chown -R puppet:puppet /opt/puppet-scripts
-
-ENV PATH="/opt/puppetlabs/bin:/opt/puppet-scripts/bin:${PATH}"
-
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-	&& install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+ENV PATH="/opt/puppetlabs/bin:${PATH}"
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
-COPY puppet.conf /etc/puppetlabs/puppet/
+COPY jetty.ini /etc/puppetlabs/puppetdb/conf.d/
+COPY database.ini /etc/puppetlabs/puppetdb/conf.d/
 
-USER puppet
+#USER puppet
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

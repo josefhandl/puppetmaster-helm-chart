@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: puppetdb
+spec:
+  selector:
+    matchLabels:
+      app: puppetdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: puppetdb
+    spec:
+      terminationGracePeriodSeconds: 180
+
+#      securityContext:
+#        runAsNonRoot: true
+#        seccompProfile:
+#          type: RuntimeDefault
+
+      hostname: {{ .Values.db.hostname | quote }}
+
+      containers:
+
+      - name: server
+        image: {{ .Values.db.image | quote }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+
+        env:
+        - name: HOSTNAME
+          value: {{ .Values.db.hostname | quote }}
+
+#        securityContext:
+#          privileged: false
+#          runAsUser: 999
+#          runAsGroup: 999
+#          allowPrivilegeEscalation: false
+#          capabilities:
+#            drop:
+#            - ALL
+
+        resources:
+          limits:
+            cpu: {{ .Values.instance.maxcpu }}
+            memory: {{ .Values.instance.maxram }}
+          requests:
+            cpu: {{ .Values.instance.mincpu }}
+            memory: {{ .Values.instance.minram }}
+

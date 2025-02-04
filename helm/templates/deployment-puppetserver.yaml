@@ -24,7 +24,7 @@ spec:
       containers:
 
       - name: server
-        image: hub.cerit.io/josef_handl/puppetserver:mk1
+        image: {{ .Values.server.image | quote }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8140

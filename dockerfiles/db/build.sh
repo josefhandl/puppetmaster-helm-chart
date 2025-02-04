@@ -2,6 +2,6 @@
 
 set -e
 
-IMAGE="hub.cerit.io/josef_handl/puppetserver:mk1"
+IMAGE="hub.cerit.io/josef_handl/puppetdb:mk1"
 docker build -t "$IMAGE" .
 docker push "$IMAGE"
