@@ -18,6 +18,6 @@ else
     puppetserver ca setup --config "$PUPPET_CONFIG"
 fi
 
-/opt/puppetlabs/bin/puppetserver start
+puppetserver start --config "$PUPPET_CONFIG"
 
 tail -f /var/log/puppetlabs/puppetserver/puppetserver.log

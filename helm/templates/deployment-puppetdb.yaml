@@ -50,3 +50,14 @@ spec:
             cpu: {{ .Values.instance.mincpu }}
             memory: {{ .Values.instance.minram }}
 
+        volumeMounts:
+        - name: pd-cert-private
+          mountPath: /opt/puppet-cert/private
+          readOnly: true
+
+      serviceAccountName: puppet-cert-saver-sa
+
+      volumes:
+      - name: pd-cert-private
+        secret:
+          secretName: puppetdb-cert-private-secret

@@ -51,19 +51,19 @@ spec:
             memory: {{ .Values.instance.minram }}
 
         volumeMounts:
-        - name: puppet-cert-ca
+        - name: ps-cert-ca
           mountPath: /opt/puppet-cert/ca
           readOnly: true
-        - name: puppet-cert-signed
+        - name: ps-cert-signed
           mountPath: /opt/puppet-cert/signed
           readOnly: true
 
       serviceAccountName: puppet-cert-saver-sa
 
       volumes:
-      - name: puppet-cert-ca
+      - name: ps-cert-ca
         secret:
-          secretName: puppet-cert-ca-secret
-      - name: puppet-cert-signed
+          secretName: puppetserver-cert-ca-secret
+      - name: ps-cert-signed
         secret:
-          secretName: puppet-cert-signed-secret
+          secretName: puppetserver-cert-signed-secret
