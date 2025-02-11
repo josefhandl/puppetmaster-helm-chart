@@ -4,6 +4,8 @@ instance:
   mincpu: "500m"
   minram: "1Gi"
 
+namespace: "puppet-ns"
+
 server:
   image: "hub.cerit.io/josef_handl/puppetserver:mk2"
   hostname: "puppetserver"

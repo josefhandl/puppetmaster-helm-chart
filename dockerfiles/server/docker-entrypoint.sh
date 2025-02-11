@@ -9,6 +9,7 @@ mkdir -p "${PUPPET_PATH}/puppetserver/ca/signed"
 
 # Substiture vars (set hostname) in puppet.conf file
 envsubst < "${PUPPET_PATH}/puppet/puppet.conf" | sponge "${PUPPET_PATH}/puppet/puppet.conf"
+envsubst < "${PUPPET_PATH}/puppet/puppetdb.conf" | sponge "${PUPPET_PATH}/puppet/puppetdb.conf"
 
 if [ -n "$(ls /opt/puppet-cert/ca/)" ]; then
     cp /opt/puppet-cert/ca/*     "${PUPPET_PATH}/puppetserver/ca/"
