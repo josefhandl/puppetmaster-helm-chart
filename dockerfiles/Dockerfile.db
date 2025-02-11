@@ -31,15 +31,16 @@ COPY db/puppet.conf /etc/puppetlabs/puppet/
 RUN mkdir -p /etc/puppetlabs/puppet/ssl/private_keys/
 COPY db/puppetdb.puppet-ns.svc.cluster.local.pem /etc/puppetlabs/puppet/ssl/private_keys/
 
-RUN chown -R puppet:puppet /etc/puppetlabs \
-    /var/log/puppetlabs
+RUN chown -R puppetdb:puppetdb /etc/puppetlabs \
+    /var/log/puppetlabs \
+    /opt/puppetlabs
 
 COPY db/docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 RUN mkdir -p /opt/puppet-scripts/bin/
 COPY shared/puppet-cert-saver.sh /opt/puppet-scripts/bin/puppet-cert-saver
-RUN chown -R puppet:puppet /opt/puppet-scripts
+RUN chown -R puppetdb:puppetdb /opt/puppet-scripts
 ENV PATH="/opt/puppetlabs/bin:/opt/puppet-scripts/bin:${PATH}"
 
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
@@ -48,7 +49,7 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 COPY db/jetty.ini /etc/puppetlabs/puppetdb/conf.d/
 COPY db/database.ini /etc/puppetlabs/puppetdb/conf.d/
 
-#USER puppet
+USER puppetdb
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 #ENTRYPOINT ["sleep", "infinity"]

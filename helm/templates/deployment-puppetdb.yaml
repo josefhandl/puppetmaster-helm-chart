@@ -14,10 +14,10 @@ spec:
     spec:
       terminationGracePeriodSeconds: 180
 
-#      securityContext:
-#        runAsNonRoot: true
-#        seccompProfile:
-#          type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 
       hostname: {{ .Values.db.hostname | quote }}
 
@@ -33,14 +33,14 @@ spec:
         - name: HOSTNAME
           value: {{ .Values.db.hostname | quote }}
 
-#        securityContext:
-#          privileged: false
-#          runAsUser: 999
-#          runAsGroup: 999
-#          allowPrivilegeEscalation: false
-#          capabilities:
-#            drop:
-#            - ALL
+        securityContext:
+          privileged: false
+          runAsUser: 999
+          runAsGroup: 999
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
 
         resources:
           limits:
