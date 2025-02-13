@@ -11,8 +11,6 @@ SECRET_PS_CA="puppetserver-cert-ca-secret"
 SECRET_PS_SIGNED="puppetserver-cert-signed-secret"
 SECRET_PD_PRIVATE="puppetdb-cert-private-secret"
 
-NAMESPACE="puppet-ns"
-
 DIR_PS_CA="/etc/puppetlabs/puppetserver/ca"
 DIR_PS_SIGNED="/etc/puppetlabs/puppetserver/ca/signed"
 DIR_PD_PRIVATE="/etc/puppetlabs/puppet/ssl/private_keys"
@@ -115,6 +113,11 @@ data:" > "$SECRET_PATH"
     exit 0
 }
 
+
+if [ -z $NAMESPACE ]; then
+    echo "Please set the NAMESPACE environment variable first"
+    exit 1
+fi
 
 if [ $# -eq 0 ]; then
     echo "No arguments provided."
