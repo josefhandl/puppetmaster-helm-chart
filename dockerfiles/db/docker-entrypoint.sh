@@ -13,7 +13,7 @@ PUPPET_CONFIG="${PUPPET_PATH}/puppet/puppet.conf"
 #
 #
 
-
+envsubst < "${PUPPET_PATH}/puppetdb/conf.d/jetty.ini" | sponge "${PUPPET_PATH}/puppetdb/conf.d/jetty.ini"
 
 # Bootstrap certificates from Puppet Server's CA
 if [ -n "$(ls /opt/puppet-cert/private/)" ]; then
