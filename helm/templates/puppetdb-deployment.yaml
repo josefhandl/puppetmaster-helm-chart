@@ -36,6 +36,14 @@ spec:
           value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
         - name: NAMESPACE
           value: {{ .Values.namespace | quote }}
+        - name: PGHOST
+          value: "puppetdb-cnpg-rw"
+        - name: PGDATABASE
+          value: {{ .Values.cnpg.database | quote }}
+        - name: PGUSER
+          value: {{ .Values.cnpg.username | quote }}
+        - name: PGPASSWORD
+          value: {{ .Values.cnpg.password | quote }}
 
         securityContext:
           privileged: false

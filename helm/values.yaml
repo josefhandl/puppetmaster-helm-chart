@@ -4,12 +4,23 @@ instance:
   mincpu: "500m"
   minram: "1Gi"
 
+  keepCerts: true
+
 namespace: ""
 
+# Puppet Server application
 server:
   image: "hub.cerit.io/josef_handl/puppetserver:mk2"
   hostname: "puppetserver"
 
+# Puppet DB application
 db:
   image: "hub.cerit.io/josef_handl/puppetdb:mk1"
   hostname: "puppetdb"
+
+# CloudNativePG (PostgreSQL)
+cnpg:
+  database: "puppetdb"
+  superuserpassword: "postgres"
+  username: "puppetdb"
+  password: "postgres"
