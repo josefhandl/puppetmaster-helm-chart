@@ -48,11 +48,11 @@ spec:
 
         resources:
           limits:
-            cpu: {{ .Values.instance.maxcpu }}
-            memory: {{ .Values.instance.maxram }}
+            cpu: {{ .Values.server.resources.maxcpu }}
+            memory: {{ .Values.server.resources.maxram }}
           requests:
-            cpu: {{ .Values.instance.mincpu }}
-            memory: {{ .Values.instance.minram }}
+            cpu: {{ .Values.server.resources.mincpu }}
+            memory: {{ .Values.server.resources.minram }}
 
         volumeMounts:
         - name: ps-cert-ca

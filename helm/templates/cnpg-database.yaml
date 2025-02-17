@@ -12,12 +12,13 @@ spec:
     name: puppetdb-cnpg-superuser-secret
 
   resources:
-    requests:
-      memory: "2Gi"
-      cpu: "1"
     limits:
-      memory: "4Gi"
-      cpu: "2"
+      cpu: {{ .Values.cnpg.resources.maxcpu }}
+      memory: {{ .Values.cnpg.resources.maxram }}
+    requests:
+      cpu: {{ .Values.cnpg.resources.mincpu }}
+      memory: {{ .Values.cnpg.resources.minram }}
+
 
   storage:
     size: 100Gi

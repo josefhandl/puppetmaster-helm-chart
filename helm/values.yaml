@@ -1,9 +1,4 @@
 instance:
-  maxcpu: "1"
-  maxram: "2Gi"
-  mincpu: "500m"
-  minram: "1Gi"
-
   keepCerts: true
 
 namespace: ""
@@ -13,10 +8,22 @@ server:
   image: "hub.cerit.io/josef_handl/puppetserver:mk2"
   hostname: "puppetserver"
 
+  resources:
+    mincpu: "200m"
+    minram: "3Gi"
+    maxcpu: "2"
+    maxram: "5Gi"
+
 # Puppet DB application
 db:
   image: "hub.cerit.io/josef_handl/puppetdb:mk1"
   hostname: "puppetdb"
+
+  resources:
+    mincpu: "200m"
+    minram: "1Gi"
+    maxcpu: "2"
+    maxram: "2Gi"
 
 # CloudNativePG (PostgreSQL)
 cnpg:
@@ -24,3 +31,9 @@ cnpg:
   superuserpassword: "postgres"
   username: "puppetdb"
   password: "postgres"
+
+  resources:
+    mincpu: "200m"
+    minram: "500Mi"
+    maxcpu: "2"
+    maxram: "2Gi"

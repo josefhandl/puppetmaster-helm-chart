@@ -56,11 +56,11 @@ spec:
 
         resources:
           limits:
-            cpu: {{ .Values.instance.maxcpu }}
-            memory: {{ .Values.instance.maxram }}
+            cpu: {{ .Values.db.resources.maxcpu }}
+            memory: {{ .Values.db.resources.maxram }}
           requests:
-            cpu: {{ .Values.instance.mincpu }}
-            memory: {{ .Values.instance.minram }}
+            cpu: {{ .Values.db.resources.mincpu }}
+            memory: {{ .Values.db.resources.minram }}
 
         volumeMounts:
         - name: pd-cert-private
