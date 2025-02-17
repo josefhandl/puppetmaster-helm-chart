@@ -21,6 +21,25 @@ spec:
 
       hostname: {{ .Values.db.hostname | quote }}
 
+
+      initContainers:
+
+      - name: init-db-wait
+        image: busybox
+        imagePullPolicy: Always
+
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        command: ['/bin/sh', '-c', 'echo -e "Waiting for the Puppet Server"; while ! nc -z puppetserver 8140; do sleep 3; echo -n "."; done; echo -e "Puppet Server seems to be up and running!";']
+
+
       containers:
 
       - name: server
