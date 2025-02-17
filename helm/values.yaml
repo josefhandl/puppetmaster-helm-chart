@@ -9,10 +9,10 @@ server:
   hostname: "puppetserver"
 
   resources:
-    mincpu: "200m"
-    minram: "3Gi"
     maxcpu: "2"
     maxram: "5Gi"
+    mincpu: "200m"
+    minram: "3Gi"
 
 # Puppet DB application
 db:
@@ -20,10 +20,10 @@ db:
   hostname: "puppetdb"
 
   resources:
-    mincpu: "200m"
-    minram: "1Gi"
     maxcpu: "2"
     maxram: "2Gi"
+    mincpu: "200m"
+    minram: "1Gi"
 
 # CloudNativePG (PostgreSQL)
 cnpg:
@@ -33,7 +33,7 @@ cnpg:
   password: "postgres"
 
   resources:
-    mincpu: "200m"
-    minram: "500Mi"
     maxcpu: "2"
     maxram: "2Gi"
+    mincpu: "200m"
+    minram: "500Mi"
