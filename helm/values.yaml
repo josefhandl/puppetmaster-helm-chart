@@ -1,4 +1,5 @@
 instance:
+  # Avoid deletion of the saved certificates in K8s Secrets when uninstalling this Helm chart
   keepCerts: true
 
 namespace: ""
