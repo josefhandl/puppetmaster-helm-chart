@@ -54,6 +54,23 @@ spec:
             drop:
             - ALL
 
+# Even though the build-in HTTPS support for readiness probe skip the certificate verification,
+# the probe fails because PuppetDB uses mutual TLS. This is the reason why the `curl` is used.
+        readinessProbe:
+          exec:
+            command:
+            - /usr/bin/curl
+            - --insecure
+            - --cacert
+            - /etc/puppetlabs/puppet/ssl/certs/ca.pem
+            - --cert
+            - /etc/puppetlabs/puppet/ssl/certs/{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local.pem
+            - --key
+            - /etc/puppetlabs/puppet/ssl/private_keys/{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local.pem
+            - https://localhost:8081/status/v1/services
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
         resources:
           limits:
             cpu: {{ .Values.db.resources.maxcpu }}

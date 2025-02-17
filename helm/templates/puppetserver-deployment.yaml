@@ -46,6 +46,14 @@ spec:
             drop:
             - ALL
 
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /status/v1/services
+            port: 8140
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
         resources:
           limits:
             cpu: {{ .Values.server.resources.maxcpu }}
