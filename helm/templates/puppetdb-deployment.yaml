@@ -24,7 +24,7 @@ spec:
 
       initContainers:
 
-      - name: init-db-wait
+      - name: wait-for-server
         image: busybox
         imagePullPolicy: Always
 
@@ -42,7 +42,7 @@ spec:
 
       containers:
 
-      - name: server
+      - name: db
         image: {{ .Values.db.image | quote }}
         imagePullPolicy: Always
         ports:
