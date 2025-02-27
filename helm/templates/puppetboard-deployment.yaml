@@ -21,6 +21,38 @@ spec:
 
       hostname: {{ .Values.board.hostname | quote }}
 
+      initContainers:
+
+      - name: wait-for-server
+        image: busybox
+        imagePullPolicy: Always
+
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        command: ['/bin/sh', '-c', 'echo -e "Waiting for the PuppetServer"; while ! nc -z puppetserver 8140; do sleep 3; echo -n "."; done; echo -e "PuppetServer seems to be up and running!";']
+
+      - name: wait-for-db
+        image: busybox
+        imagePullPolicy: Always
+
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        command: ['/bin/sh', '-c', 'echo -e "Waiting for the PuppetDB"; while ! nc -z puppetdb 8081; do sleep 3; echo -n "."; done; echo -e "PuppetDB seems to be up and running!";']
+
       containers:
 
       - name: board
@@ -49,6 +81,14 @@ spec:
           capabilities:
             drop:
             - ALL
+
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /status
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
 
         resources:
           limits:
