@@ -5,7 +5,7 @@ set -e
 # Copy private key to the right location
 cp /opt/puppet-cert-mount/private/* /opt/puppet-cert/
 
-# Download Puppet Board's certificate
+# Download PuppetBoard's certificate and CA cert bundle from PuppetServer's CA
 wget --no-check-certificate -O "/opt/puppet-cert/${HOSTNAME_FULL_PUPPETBOARD}.crt" "https://${HOSTNAME_FULL_PUPPETSERVER}:8140/puppet-ca/v1/certificate/${HOSTNAME_FULL_PUPPETBOARD}"
 wget --no-check-certificate -O "/opt/puppet-cert/puppet-root-ca.crt"               "https://${HOSTNAME_FULL_PUPPETSERVER}:8140/puppet-ca/v1/certificate/ca"
 
