@@ -34,8 +34,10 @@ spec:
           value: {{ .Values.server.hostname | quote }}
         - name: NAMESPACE
           value: {{ .Values.namespace | quote }}
-        - name: K8S_PUPPETDB_HOSTNAME_FULL
-          value: puppetdb.{{ .Values.namespace }}.svc.cluster.local
+        - name: HOSTNAME_FULL_PUPPETSERVER
+          value: "{{ .Values.server.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+        - name: HOSTNAME_FULL_PUPPETDB
+          value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
 
         securityContext:
           privileged: false

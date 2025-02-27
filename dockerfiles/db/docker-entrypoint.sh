@@ -13,6 +13,7 @@ PUPPET_CONFIG="${PUPPET_PATH}/puppet/puppet.conf"
 #
 #
 
+envsubst < "${PUPPET_PATH}/puppet/puppet.conf" | sponge "${PUPPET_PATH}/puppet/puppet.conf"
 envsubst < "${PUPPET_PATH}/puppetdb/conf.d/jetty.ini" | sponge "${PUPPET_PATH}/puppetdb/conf.d/jetty.ini"
 envsubst < "${PUPPET_PATH}/puppetdb/conf.d/database.ini" | sponge "${PUPPET_PATH}/puppetdb/conf.d/database.ini"
 

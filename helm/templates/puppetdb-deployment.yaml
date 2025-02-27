@@ -51,10 +51,12 @@ spec:
         env:
         - name: HOSTNAME
           value: {{ .Values.db.hostname | quote }}
-        - name: HOSTNAME_FULL
-          value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
         - name: NAMESPACE
           value: {{ .Values.namespace | quote }}
+        - name: HOSTNAME_FULL_PUPPETSERVER
+          value: "{{ .Values.server.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+        - name: HOSTNAME_FULL_PUPPETDB
+          value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
         - name: PGHOST
           value: "puppetdb-cnpg-rw"
         - name: PGDATABASE
