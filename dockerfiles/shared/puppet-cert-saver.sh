@@ -6,14 +6,16 @@ set -e
 # -------------------------
 # PS = Puppet Server
 # PD = Puppet DB
+# PB = Puppet Board
 
 SECRET_PS_CA="puppetserver-cert-ca-secret"
 SECRET_PS_SIGNED="puppetserver-cert-signed-secret"
 SECRET_PD_PRIVATE="puppetdb-cert-private-secret"
+SECRET_PB_PRIVATE="puppetboard-cert-private-secret"
 
 DIR_PS_CA="/etc/puppetlabs/puppetserver/ca"
 DIR_PS_SIGNED="/etc/puppetlabs/puppetserver/ca/signed"
-DIR_PD_PRIVATE="/etc/puppetlabs/puppet/ssl/private_keys"
+DIR_PX_PRIVATE="/etc/puppetlabs/puppet/ssl/private_keys"
 
 DIR_BASE="/opt/puppet-scripts"
 DIR_TMP="${DIR_BASE}/tmp"
@@ -27,7 +29,8 @@ function usage() {
     echo "Commands:"
     echo "  server-ca      Puppet Server only - Create/Patch a Kubernetes secret with CA certificates"
     echo "  server-signed  Puppet Server only - Create/Patch a Kubernetes secret with signed certificates"
-    echo "  db-private     Puppet DB only - Create/Patch a Kubernetes secret with private key of Puppet DB"
+    echo "  db-private     Puppet DB only     - Create/Patch a Kubernetes secret with private key of Puppet DB"
+    echo "  board-private  Puppet Board only  - Create/Patch a Kubernetes secret with private key of Puppet Board"
     echo "  help           Show this help message"
     echo ""
     exit 0
@@ -42,12 +45,13 @@ function process_secret() {
     # Set secret specific variables
     SECRET_NAME=$1
     DIR_PUPPET=$2
+    SPECIFIC_FILE=$3
     SECRET_PATH="${DIR_TMP}/${SECRET_NAME}.yaml"
 
     # Check if Puppet dir exists
     if [ ! -d "$DIR_PUPPET" ]; then
-      echo "Error: Directory $DIR_PUPPET does not exist!"
-      exit 1
+        echo "Error: Directory $DIR_PUPPET does not exist!"
+        exit 1
     fi
 
     # Check permissions to Kubernetes API
@@ -73,24 +77,38 @@ metadata:
 type: Opaque
 data:" > "$SECRET_PATH"
 
-    # Add each file from the specified directory to the secret
-    for FILE_PUPPET_PATH in $(find "${DIR_PUPPET}" -maxdepth 1 -type f); do
-        FILE_PUPPET_NAME=$(basename "${FILE_PUPPET_PATH}")
-        FILE_PUPPET_BASE64=$(base64 -w0 "${FILE_PUPPET_PATH}")
-        echo "  $FILE_PUPPET_NAME: \"$FILE_PUPPET_BASE64\"" >> "$SECRET_PATH"
-    done
+    if [ -z "$SPECIFIC_FILE" ]; then
+        # Add each file from the specified directory to the secret
+        for FILE_PUPPET_PATH in $(find "${DIR_PUPPET}" -maxdepth 1 -type f); do
+            FILE_PUPPET_NAME=$(basename "${FILE_PUPPET_PATH}")
+            FILE_PUPPET_BASE64=$(base64 -w0 "${FILE_PUPPET_PATH}")
+            echo "  $FILE_PUPPET_NAME: \"$FILE_PUPPET_BASE64\"" >> "$SECRET_PATH"
+        done
+    else
+        FILE_PUPPET_PATH="${DIR_PUPPET}/${SPECIFIC_FILE}"
+        if [ -f "$FILE_PUPPET_PATH" ]; then
+            FILE_PUPPET_NAME=$(basename "${FILE_PUPPET_PATH}")
+            FILE_PUPPET_BASE64=$(base64 -w0 "${FILE_PUPPET_PATH}")
+            echo "  $FILE_PUPPET_NAME: \"$FILE_PUPPET_BASE64\"" >> "$SECRET_PATH"
+        else
+            echo "Error: Required file \"${FILE_PUPPET_PATH}\" not found!"
+            exit 1
+        fi
+
+        "${DIR_PS_SIGNED}/${SPECIFIC_FILE}"
+    fi
 
     # Dump the current state of the secret
     echo "Dumping the current state of the Secret..."
     FILE_SECRET_DUMP="${DIR_DUMP}/${SECRET_NAME}-dump-$(date +%Y-%m-%d-%H-%M-%S).yaml"
-    kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o yaml > "$FILE_SECRET_DUMP"
+    kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o yaml > "$FILE_SECRET_DUMP" | echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
     echo "Secret dump temporary saved to ${FILE_SECRET_DUMP}"
     echo ""
 
     # Show the current state of the secret
     echo "Old Secret values:"
     echo "----------------------------------------------------------"
-    kubectl describe secret "$SECRET_NAME" -n "$NAMESPACE"
+    kubectl describe secret "$SECRET_NAME" -n "$NAMESPACE" | echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
     echo "----------------------------------------------------------"
     echo ""
 
@@ -134,7 +152,10 @@ while [ $# -gt 0 ]; do
             process_secret "$SECRET_PS_SIGNED" "$DIR_PS_SIGNED"
             ;;
         db-private)
-            process_secret "$SECRET_PD_PRIVATE" "$DIR_PD_PRIVATE"
+            process_secret "$SECRET_PD_PRIVATE" "$DIR_PX_PRIVATE" "${HOSTNAME_FULL_PUPPETDB}.pem"
+            ;;
+        board-private)
+            process_secret "$SECRET_PB_PRIVATE" "$DIR_PX_PRIVATE" "${HOSTNAME_FULL_PUPPETBOARD}.pem"
             ;;
         help)
             usage

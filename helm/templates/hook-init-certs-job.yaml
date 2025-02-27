@@ -1,18 +1,19 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: puppetserver
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: hook-succeeded
 spec:
-  selector:
-    matchLabels:
-      app: puppetserver
-  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: puppetserver
   template:
     metadata:
       labels:
         app: puppetserver
     spec:
-      terminationGracePeriodSeconds: 180
 
       securityContext:
         runAsNonRoot: true
@@ -20,16 +21,16 @@ spec:
           type: RuntimeDefault
 
       hostname: {{ .Values.server.hostname | quote }}
+      restartPolicy: OnFailure
 
       containers:
-
       - name: server
         image: {{ .Values.server.image | quote }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8140
 
-        command: ["/docker-entrypoint.sh"]
+        command: ["/docker-entrypoint-hook.sh"]
 
         env:
         - name: HOSTNAME
@@ -40,6 +41,8 @@ spec:
           value: "{{ .Values.server.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
         - name: HOSTNAME_FULL_PUPPETDB
           value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+        - name: HOSTNAME_FULL_PUPPETBOARD
+          value: "{{ .Values.board.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
 
         securityContext:
           privileged: false
@@ -50,14 +53,6 @@ spec:
             drop:
             - ALL
 
-        readinessProbe:
-          httpGet:
-            scheme: HTTPS
-            path: /status/v1/services
-            port: 8140
-          initialDelaySeconds: 10
-          periodSeconds: 10
-
         resources:
           limits:
             cpu: {{ .Values.server.resources.maxcpu }}
@@ -66,20 +61,4 @@ spec:
             cpu: {{ .Values.server.resources.mincpu }}
             memory: {{ .Values.server.resources.minram }}
 
-        volumeMounts:
-        - name: ps-cert-ca
-          mountPath: /opt/puppet-cert/ca
-          readOnly: true
-        - name: ps-cert-signed
-          mountPath: /opt/puppet-cert/signed
-          readOnly: true
-
       serviceAccountName: puppet-cert-saver-sa
-
-      volumes:
-      - name: ps-cert-ca
-        secret:
-          secretName: puppetserver-cert-ca-secret
-      - name: ps-cert-signed
-        secret:
-          secretName: puppetserver-cert-signed-secret

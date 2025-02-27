@@ -1,0 +1,53 @@
+FROM ubuntu:22.04
+
+ENV USER=puppet
+ENV USER_HOME=/home/${USER}
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Prague
+
+RUN groupadd --gid 1000 ${USER} \
+    && useradd --uid 1000 --create-home --home-dir ${USER_HOME} -s /bin/bash -g ${USER} ${USER} \
+    && chown -R ${USER}:${USER} ${USER_HOME}
+
+RUN apt update && apt install -y --no-install-recommends \
+        python3-pip \
+	python3-venv \
+	virtualenv \
+	git \
+	curl wget vim nmap dnsutils \
+# Install `sponge` and `envsubst`
+	moreutils gettext \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+
+RUN git clone https://github.com/voxpupuli/puppetboard.git
+
+RUN chown -R ${USER}:${USER} /opt/puppetboard
+
+COPY board/docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+RUN mkdir -p /opt/puppet-cert-mount/ /opt/puppet-cert/ \
+	&& chown ${USER}:${USER} /opt/puppet-cert
+
+COPY board/settings.py /opt/puppetboard/
+
+USER ${USER}
+WORKDIR /opt/puppetboard
+
+RUN python3 -m venv venv && \
+	. venv/bin/activate && \
+	pip install -e . && \
+	pip install gunicorn
+
+#RUN virtualenv -p python3 venv && \
+#. venv/bin/activate && \
+#pip install puppetboard
+
+
+
+#USER puppet
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

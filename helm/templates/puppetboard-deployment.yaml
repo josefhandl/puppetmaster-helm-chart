@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: puppetboard
+spec:
+  selector:
+    matchLabels:
+      app: puppetboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: puppetboard
+    spec:
+      terminationGracePeriodSeconds: 180
+
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+      hostname: {{ .Values.board.hostname | quote }}
+
+      containers:
+
+      - name: board
+        image: {{ .Values.board.image | quote }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+
+        env:
+        - name: HOSTNAME
+          value: {{ .Values.board.hostname | quote }}
+        - name: NAMESPACE
+          value: {{ .Values.namespace | quote }}
+        - name: HOSTNAME_FULL_PUPPETSERVER
+          value: "{{ .Values.server.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+        - name: HOSTNAME_FULL_PUPPETDB
+          value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+        - name: HOSTNAME_FULL_PUPPETBOARD
+          value: "{{ .Values.board.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
+
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        resources:
+          limits:
+            cpu: {{ .Values.board.resources.maxcpu }}
+            memory: {{ .Values.board.resources.maxram }}
+          requests:
+            cpu: {{ .Values.board.resources.mincpu }}
+            memory: {{ .Values.board.resources.minram }}
+
+        volumeMounts:
+        - name: pd-cert-private
+          mountPath: /opt/puppet-cert-mount/private
+          readOnly: true
+
+      volumes:
+      - name: pd-cert-private
+        secret:
+          secretName: puppetboard-cert-private-secret

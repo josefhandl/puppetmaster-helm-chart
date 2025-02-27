@@ -46,8 +46,9 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 	&& install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 COPY server/docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
+COPY server/docker-entrypoint-hook.sh /
+RUN chmod +x /docker-entrypoint.sh /docker-entrypoint-hook.sh
 
 USER puppet
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash"]

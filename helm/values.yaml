@@ -38,3 +38,13 @@ cnpg:
     maxram: "2Gi"
     mincpu: "200m"
     minram: "500Mi"
+
+board:
+  image: "hub.cerit.io/josef_handl/puppetboard:mk1"
+  hostname: "puppetboard"
+
+  resources:
+    maxcpu: "2"
+    maxram: "2Gi"
+    mincpu: "200m"
+    minram: "500Mi"
