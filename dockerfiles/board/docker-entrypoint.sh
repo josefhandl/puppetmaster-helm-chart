@@ -24,4 +24,15 @@ export SECRET_KEY="asdf"
 export PUPPETBOARD_SETTINGS="/opt/puppetboard/settings.py"
 envsubst < "${PUPPETBOARD_SETTINGS}" | sponge "${PUPPETBOARD_SETTINGS}"
 
-gunicorn -b 0.0.0.0:8080 --preload --access-logfile=- puppetboard.app:app
+gunicorn -b 0.0.0.0:8080 --preload --access-logfile=- puppetboard.app:app & pid_gunicorn=$!
+
+# Register trap and wait for signal
+_trap () {
+    kill "$pid_gunicorn"
+    while ps "$pid_gunicorn" > /dev/null ; do
+        sleep 1
+    done
+}
+
+trap "_trap" SIGINT SIGTERM
+wait "$pid_gunicorn"
