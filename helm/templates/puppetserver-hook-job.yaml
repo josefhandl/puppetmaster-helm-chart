@@ -1,3 +1,4 @@
+{{ if .Values.instance.generateSecrets }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -6,9 +7,6 @@ metadata:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: hook-succeeded
 spec:
-#  selector:
-#    matchLabels:
-#      app: puppetserver
   template:
     metadata:
       labels:
@@ -62,3 +60,4 @@ spec:
             memory: {{ .Values.server.resources.minram }}
 
       serviceAccountName: puppet-cert-saver-sa
+{{ end }}

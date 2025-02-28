@@ -2,9 +2,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: puppet-cert-saver-role
+{{ if .Values.instance.generateSecrets }}
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
+{{ end }}
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -14,18 +16,22 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: puppet-cert-saver-sa
+{{ if .Values.instance.generateSecrets }}
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
+{{ end }}
 automountServiceAccountToken: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: puppet-cert-saver-rb
+{{ if .Values.instance.generateSecrets }}
   annotations:
     helm.sh/hook: pre-install
     helm.sh/hook-delete-policy: before-hook-creation
+{{ end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

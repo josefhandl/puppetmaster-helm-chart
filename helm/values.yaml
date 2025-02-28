@@ -1,6 +1,12 @@
 instance:
-  # Avoid deletion of the saved certificates in K8s Secrets when uninstalling this Helm chart
-  keepCerts: true
+  # Allows to start `pre-install` hook to generate and save (or OVERWRITE!} the Puppet certificates to Kubernetes
+  # Secrets.
+  # ---
+  # Because the Secrets storing the certificates and keys for the PuppetServer CA are not assigned to this Helm chart,
+  # they won't be removed after uninstalling this Helm chart. If there are any residual Secrets related with previous
+  # installation of this chart, they will overwriten if this option is allowed. However first installation requires to
+  # enable it.
+  generateSecrets: false
 
 namespace: ""
 
