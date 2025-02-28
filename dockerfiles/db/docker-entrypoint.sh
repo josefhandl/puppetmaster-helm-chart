@@ -10,7 +10,7 @@ envsubst < "${PUPPET_PATH}/puppetdb/conf.d/jetty.ini" | sponge "${PUPPET_PATH}/p
 envsubst < "${PUPPET_PATH}/puppetdb/conf.d/database.ini" | sponge "${PUPPET_PATH}/puppetdb/conf.d/database.ini"
 
 # Load private key from K8s Secret
-cp /opt/puppet-cert/private/* "${PUPPET_PATH}/puppet/ssl/private_keys/"
+cp /opt/puppet-cert-mount/private/* "${PUPPET_PATH}/puppet/ssl/private_keys/"
 
 # Bootstrap certificates from PuppetServer's CA
 puppet ssl bootstrap --config "$PUPPET_CONFIG"

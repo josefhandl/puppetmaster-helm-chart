@@ -68,10 +68,10 @@ spec:
 
         volumeMounts:
         - name: ps-cert-ca
-          mountPath: /opt/puppet-cert/ca
+          mountPath: /opt/puppet-cert-mount/ca
           readOnly: true
         - name: ps-cert-signed
-          mountPath: /opt/puppet-cert/signed
+          mountPath: /opt/puppet-cert-mount/signed
           readOnly: true
 
       serviceAccountName: puppet-cert-saver-sa

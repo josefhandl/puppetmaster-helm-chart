@@ -14,8 +14,8 @@ envsubst < "${PUPPET_PATH}/puppet/puppet.conf" | sponge "${PUPPET_PATH}/puppet/p
 envsubst < "${PUPPET_PATH}/puppet/puppetdb.conf" | sponge "${PUPPET_PATH}/puppet/puppetdb.conf"
 
 # Load required keys and certs from K8s Secret
-cp /opt/puppet-cert/ca/*     "${PUPPET_PATH}/puppetserver/ca/"
-cp /opt/puppet-cert/signed/* "${PUPPET_PATH}/puppetserver/ca/signed"
+cp /opt/puppet-cert-mount/ca/*     "${PUPPET_PATH}/puppetserver/ca/"
+cp /opt/puppet-cert-mount/signed/* "${PUPPET_PATH}/puppetserver/ca/signed"
 echo "Puppet certs was loaded from Kubernetes Secrets"
 
 # Start

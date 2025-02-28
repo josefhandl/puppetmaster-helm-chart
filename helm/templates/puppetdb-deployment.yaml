@@ -117,7 +117,7 @@ spec:
 
         volumeMounts:
         - name: pd-cert-private
-          mountPath: /opt/puppet-cert/private
+          mountPath: /opt/puppet-cert-mount/private
           readOnly: true
 
       serviceAccountName: puppet-cert-saver-sa

@@ -94,21 +94,19 @@ data:" > "$SECRET_PATH"
             echo "Error: Required file \"${FILE_PUPPET_PATH}\" not found!"
             exit 1
         fi
-
-        "${DIR_PS_SIGNED}/${SPECIFIC_FILE}"
     fi
 
     # Dump the current state of the secret
     echo "Dumping the current state of the Secret..."
     FILE_SECRET_DUMP="${DIR_DUMP}/${SECRET_NAME}-dump-$(date +%Y-%m-%d-%H-%M-%S).yaml"
-    kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o yaml > "$FILE_SECRET_DUMP" | echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
+    kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o yaml > "$FILE_SECRET_DUMP" || echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
     echo "Secret dump temporary saved to ${FILE_SECRET_DUMP}"
     echo ""
 
     # Show the current state of the secret
     echo "Old Secret values:"
     echo "----------------------------------------------------------"
-    kubectl describe secret "$SECRET_NAME" -n "$NAMESPACE" | echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
+    kubectl describe secret "$SECRET_NAME" -n "$NAMESPACE" || echo "Secret \"${SECRET_NAME}\" doesn't exist yet."
     echo "----------------------------------------------------------"
     echo ""
 
