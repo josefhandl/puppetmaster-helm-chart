@@ -48,6 +48,7 @@ cnpg:
 board:
   image: "hub.cerit.io/josef_handl/puppetboard:mk1"
   hostname: "puppetboard"
+  url: ""
 
   resources:
     maxcpu: "2"

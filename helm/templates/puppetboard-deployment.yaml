@@ -59,7 +59,7 @@ spec:
         image: {{ .Values.board.image | quote }}
         imagePullPolicy: Always
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
 
         env:
         - name: HOSTNAME
