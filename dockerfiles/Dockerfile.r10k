@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+ENV USER=puppetuser
+ENV USER_HOME=/home/${USER}
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Prague
+
+RUN groupadd --gid 999 ${USER} \
+    && useradd --uid 999 --create-home --home-dir ${USER_HOME} -s /bin/bash -g ${USER} ${USER} \
+    && chown -R ${USER}:${USER} ${USER_HOME}
+
+RUN apt update && apt install -y --no-install-recommends \
+# Install `sponge` and `envsubst`
+	moreutils gettext \
+# Dependencies for r10k
+    build-essential ruby-full make cmake pkg-config clang libgit2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN gem install r10k rugged
+
+RUN mkdir -p /etc/puppetlabs/code/environments/production /etc/puppetlabs/puppet/ \
+    && chown ${USER}:${USER} -R /etc/puppetlabs
+
+COPY r10k/r10k.yaml /etc/puppetlabs/puppet/
+
+COPY r10k/docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+USER puppet

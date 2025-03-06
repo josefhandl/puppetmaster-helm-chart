@@ -69,6 +69,8 @@ spec:
             memory: {{ .Values.server.resources.minram }}
 
         volumeMounts:
+        - name: ps-r10k-data
+          mountPath: /etc/puppetlabs/code/environments
         - name: ps-cert-ca
           mountPath: /opt/puppet-cert-mount/ca
           readOnly: true
@@ -76,9 +78,42 @@ spec:
           mountPath: /opt/puppet-cert-mount/signed
           readOnly: true
 
+      - name: r10k
+        image: {{ .Values.server.r10k.image | quote }}
+        imagePullPolicy: Always
+
+        command: ["/docker-entrypoint.sh"]
+
+        env:
+        - name: GIT_REPO
+          value: "{{ .Values.server.gitRepo }}"
+
+        securityContext:
+          privileged: false
+          runAsUser: 999
+          runAsGroup: 999
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
+        resources:
+          limits:
+            cpu: {{ .Values.server.r10k.resources.maxcpu }}
+            memory: {{ .Values.server.r10k.resources.maxram }}
+          requests:
+            cpu: {{ .Values.server.r10k.resources.mincpu }}
+            memory: {{ .Values.server.r10k.resources.minram }}
+
+        volumeMounts:
+        - name: ps-r10k-data
+          mountPath: /etc/puppetlabs/code/environments
+
       serviceAccountName: puppet-cert-saver-sa
 
       volumes:
+      - name: ps-r10k-data
+        emptyDir: {}
       - name: ps-cert-ca
         secret:
           secretName: puppetserver-cert-ca-secret

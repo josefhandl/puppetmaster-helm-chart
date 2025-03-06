@@ -14,12 +14,25 @@ namespace: ""
 server:
   image: "hub.cerit.io/josef_handl/puppetserver:mk2"
   hostname: "puppetserver"
+  url: ""
+
+  # Repository with configs
+  gitRepo: ""
 
   resources:
     maxcpu: "2"
     maxram: "5Gi"
     mincpu: "200m"
     minram: "3Gi"
+
+  # r10k application in the same pod
+  r10k:
+    image: "hub.cerit.io/josef_handl/puppetr10k:mk1"
+    resources:
+      maxcpu: "2"
+      maxram: "1Gi"
+      mincpu: "100m"
+      minram: "500Mi"
 
 # Puppet DB application
 db:
