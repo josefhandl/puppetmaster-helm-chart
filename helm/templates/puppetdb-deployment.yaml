@@ -21,7 +21,6 @@ spec:
 
       hostname: {{ .Values.db.hostname | quote }}
 
-
       initContainers:
 
       - name: wait-for-cnpg
@@ -53,7 +52,6 @@ spec:
             - ALL
 
         command: ['/bin/sh', '-c', 'echo -e "Waiting for the Puppet Server"; while ! nc -z puppetserver 8140; do sleep 3; echo -n "."; done; echo -e "Puppet Server seems to be up and running!";']
-
 
       containers:
 
@@ -119,8 +117,6 @@ spec:
         - name: pd-cert-private
           mountPath: /opt/puppet-cert-mount/private
           readOnly: true
-
-      serviceAccountName: puppet-cert-saver-sa
 
       volumes:
       - name: pd-cert-private

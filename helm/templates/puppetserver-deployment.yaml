@@ -40,7 +40,7 @@ spec:
           value: "{{ .Values.server.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
         - name: HOSTNAME_FULL_PUPPETDB
           value: "{{ .Values.db.hostname }}.{{ .Values.namespace }}.svc.cluster.local"
-        - name: PUPPETSERVER_INGRESS
+        - name: PUPPETSERVER_LB
           value: "{{ .Values.server.url }}"
 
         securityContext:

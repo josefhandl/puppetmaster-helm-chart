@@ -12,7 +12,7 @@ namespace: ""
 
 # Puppet Server application
 server:
-  image: "hub.cerit.io/josef_handl/puppetserver:mk2"
+  image: ""
   hostname: "puppetserver"
   url: ""
 
@@ -27,7 +27,7 @@ server:
 
   # r10k application in the same pod
   r10k:
-    image: "hub.cerit.io/josef_handl/puppetr10k:mk1"
+    image: ""
     resources:
       maxcpu: "2"
       maxram: "1Gi"
@@ -36,7 +36,7 @@ server:
 
 # Puppet DB application
 db:
-  image: "hub.cerit.io/josef_handl/puppetdb:mk1"
+  image: ""
   hostname: "puppetdb"
 
   resources:
@@ -59,7 +59,7 @@ cnpg:
     minram: "500Mi"
 
 board:
-  image: "hub.cerit.io/josef_handl/puppetboard:mk1"
+  image: ""
   hostname: "puppetboard"
   url: ""
 
