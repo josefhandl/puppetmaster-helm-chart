@@ -73,11 +73,11 @@ spec:
         - name: PGHOST
           value: "puppetdb-cnpg-rw"
         - name: PGDATABASE
-          value: {{ .Values.cnpg.database | quote }}
+          value: {{ .Values.db.postgres.database | quote }}
         - name: PGUSER
-          value: {{ .Values.cnpg.username | quote }}
+          value: {{ .Values.db.postgres.username | quote }}
         - name: PGPASSWORD
-          value: {{ .Values.cnpg.password | quote }}
+          value: {{ .Values.db.postgres.password | quote }}
 
         securityContext:
           privileged: false

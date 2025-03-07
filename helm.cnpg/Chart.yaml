@@ -1,0 +1,12 @@
+apiVersion: v2
+name: puppetcnpg
+version: 0.1
+appVersion: "15.0"
+description: A Helm chart to deploy CNPG for Puppet Master in Kubernetes
+icon: file://logo.png
+keywords:
+- puppet
+- puppetmaster
+- puppetserver
+- cnpg
+type: application

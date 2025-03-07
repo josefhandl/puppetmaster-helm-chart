@@ -1,0 +1,12 @@
+# CloudNativePG (PostgreSQL)
+cnpg:
+  database: ""
+  superuserpassword: ""
+  username: ""
+  password: ""
+
+  resources:
+    maxcpu: "2"
+    maxram: "2Gi"
+    mincpu: "200m"
+    minram: "500Mi"

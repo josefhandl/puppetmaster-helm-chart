@@ -45,19 +45,12 @@ db:
     mincpu: "200m"
     minram: "1Gi"
 
-# CloudNativePG (PostgreSQL)
-cnpg:
-  database: "puppetdb"
-  superuserpassword: "postgres"
-  username: "puppetdb"
-  password: "postgres"
+  postgres:
+    database: ""
+    username: ""
+    password: ""
 
-  resources:
-    maxcpu: "2"
-    maxram: "2Gi"
-    mincpu: "200m"
-    minram: "500Mi"
-
+# Puppet Board application (https://github.com/voxpupuli/puppetboard)
 board:
   image: ""
   hostname: "puppetboard"

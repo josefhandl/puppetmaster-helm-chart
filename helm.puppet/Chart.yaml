@@ -1,11 +1,12 @@
 apiVersion: v2
-name: puppetserver
+name: puppetmaster
 version: 0.1
 appVersion: "8.0.10"
-description: A Helm chart to deploy Puppet Master (puppetserver) in Kubernetes
+description: A Helm chart to deploy Puppet Master in Kubernetes
 icon: file://logo.png
 keywords:
 - puppet
 - puppetmaster
 - puppetserver
+- puppetboard
 type: application
