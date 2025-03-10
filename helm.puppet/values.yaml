@@ -16,8 +16,8 @@ server:
   hostname: "puppetserver"
   url: ""
 
-  # Repository with configs
   gitRepo: ""
+  # Repository with configs (SSH protocol only! - e.g.: "git@github.com:myname/myproject.git")
 
   resources:
     maxcpu: "2"

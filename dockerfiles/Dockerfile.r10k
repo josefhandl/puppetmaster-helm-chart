@@ -14,10 +14,11 @@ RUN apt update && apt install -y --no-install-recommends \
 # Install `sponge` and `envsubst`
 	moreutils gettext \
 # Dependencies for r10k
-    build-essential ruby-full make cmake pkg-config clang libgit2-dev \
+    build-essential ruby-full make cmake pkg-config clang libgit2-dev libssh2-1-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN gem install r10k rugged
+RUN gem install r10k \
+    && gem install rugged -- --with-ssh
 
 RUN mkdir -p /etc/puppetlabs/code/environments/production /etc/puppetlabs/puppet/ \
     && chown ${USER}:${USER} -R /etc/puppetlabs
@@ -27,4 +28,6 @@ COPY r10k/r10k.yaml /etc/puppetlabs/puppet/
 COPY r10k/docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
-USER puppet
+USER puppetuser
+
+RUN mkdir -p ${USER_HOME}/.ssh/

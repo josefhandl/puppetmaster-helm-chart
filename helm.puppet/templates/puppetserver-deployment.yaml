@@ -108,6 +108,8 @@ spec:
         volumeMounts:
         - name: ps-r10k-data
           mountPath: /etc/puppetlabs/code/environments
+        - name: ps-git-ssh
+          mountPath: /home/puppetuser/.ssh/
 
       serviceAccountName: puppet-cert-saver-sa
 
@@ -120,3 +122,6 @@ spec:
       - name: ps-cert-signed
         secret:
           secretName: puppetserver-cert-signed-secret
+      - name: ps-git-ssh
+        secret:
+          secretName: puppetserver-git-ssh-secret

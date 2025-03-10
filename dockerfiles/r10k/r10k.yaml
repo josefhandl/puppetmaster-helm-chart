@@ -7,3 +7,5 @@
   :puppet_repo:
     remote: '$GIT_REPO'
     basedir: '/etc/puppetlabs/code/environments'
+:git:
+  private_key: '/home/puppetuser/.ssh/id_ed25519'
