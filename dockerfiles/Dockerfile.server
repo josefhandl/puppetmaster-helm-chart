@@ -51,4 +51,6 @@ RUN chmod +x /docker-entrypoint.sh /docker-entrypoint-hook.sh
 
 USER puppet
 
-ENTRYPOINT ["/bin/bash"]
+RUN ln -s /etc/puppetlabs/code/environments /etc/puppetlabs/puppet/r10k
+
+#ENTRYPOINT ["/bin/bash"]
