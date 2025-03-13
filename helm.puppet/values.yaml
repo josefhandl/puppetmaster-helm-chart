@@ -61,3 +61,16 @@ board:
     maxram: "2Gi"
     mincpu: "200m"
     minram: "500Mi"
+
+  oauth2Proxy:
+    image: "quay.io/oauth2-proxy/oauth2-proxy:latest"
+    hostname: "oauth2-proxy"
+
+    clientId: ""
+    clientSecret: ""
+
+    resources:
+      maxcpu: "2"
+      maxram: "1Gi"
+      mincpu: "100m"
+      minram: "500Mi"
