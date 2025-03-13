@@ -70,7 +70,9 @@ spec:
 
         volumeMounts:
         - name: ps-r10k-data
-          mountPath: /etc/puppetlabs/code/environments
+          mountPath: /etc/puppetlabs/puppet/r10k
+        - name: ps-r10k-cache
+          mountPath: /etc/puppetlabs/code/r10k_cache
         - name: ps-cert-ca
           mountPath: /opt/puppet-cert-mount/ca
           readOnly: true
@@ -107,7 +109,9 @@ spec:
 
         volumeMounts:
         - name: ps-r10k-data
-          mountPath: /etc/puppetlabs/code/environments
+          mountPath: /etc/puppetlabs/puppet/r10k
+        - name: ps-r10k-cache
+          mountPath: /etc/puppetlabs/code/r10k_cache
         - name: ps-git-ssh
           mountPath: /home/puppetuser/.ssh/
 
@@ -115,6 +119,8 @@ spec:
 
       volumes:
       - name: ps-r10k-data
+        emptyDir: {}
+      - name: ps-r10k-cache
         emptyDir: {}
       - name: ps-cert-ca
         secret:
