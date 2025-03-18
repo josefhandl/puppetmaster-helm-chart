@@ -65,9 +65,13 @@ board:
   oauth2Proxy:
     image: "quay.io/oauth2-proxy/oauth2-proxy:latest"
     hostname: "oauth2-proxy"
+    oidcUrl: ""
 
     clientId: ""
     clientSecret: ""
+    # Generate using the following command:
+    # docker run -ti --rm python:3-alpine python -c 'import secrets,base64; print(base64.b64encode(base64.b64encode(secrets.token_bytes(16))));'
+    cookieSecret: ""
 
     resources:
       maxcpu: "2"
