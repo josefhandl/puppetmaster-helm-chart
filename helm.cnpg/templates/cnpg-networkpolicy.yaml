@@ -1,0 +1,48 @@
+{{- if .Values.instance.networkPolicy }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: puppetdb-cnpg
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: puppetdb-cnpg
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports: # expose this CloudNativePG
+    - port: 5432
+      protocol: TCP
+    from:
+    - podSelector: # allow from PuppetDB
+        matchLabels:
+          app: puppetdb
+  - ports: # expose this CloudNativePG status
+    - port: 8000
+      protocol: TCP
+    from: # allow from CloudNativePG namespace
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudnativepg
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cloudnative-pg
+  egress:
+  - ports: # to K8s API
+    - port: 6443
+      protocol: TCP
+    to:
+    - ipBlock:
+        cidr: 10.43.0.1/32
+    - ipBlock:
+        cidr: 10.16.62.14/32
+    - ipBlock:
+        cidr: 10.16.62.15/32
+    - ipBlock:
+        cidr: 10.16.62.16/32
+    - ipBlock:
+        cidr: 10.16.62.17/32
+    - ipBlock:
+        cidr: 10.16.62.18/32
+{{- end }}

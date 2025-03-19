@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: puppetboard-np
+spec:
+  podSelector:
+    matchLabels:
+      app: puppetboard
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports: # expose this Puppetboard
+    - protocol: TCP
+      port: 8080
+    from:
+    - podSelector: # allow from Oauth2-proxy /OR/
+        matchLabels:
+          app: oauth2-proxy
+    - namespaceSelector: # allow from Ingress (nginx in kube-system)
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+  egress:
+  - ports: # to PuppetDB
+    - protocol: TCP
+      port: 8081
+  - ports: # to DNS
+    - protocol: UDP
+      port: 53
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns

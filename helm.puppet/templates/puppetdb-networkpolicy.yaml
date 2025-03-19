@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: puppetdb-np
+spec:
+  podSelector:
+    matchLabels:
+      app: puppetdb
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports: # expose this PuppetDB
+    - protocol: TCP
+      port: 8081
+    from:
+    - podSelector: # allow from PuppetBoard
+        matchLabels:
+          app: puppetboard
+  egress:
+  - ports: # to PuppetServer
+    - protocol: TCP
+      port: 8140
+  - ports: # to DNS
+    - protocol: UDP
+      port: 53
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
