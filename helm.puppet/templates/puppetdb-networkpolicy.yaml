@@ -18,9 +18,13 @@ spec:
         matchLabels:
           app: puppetboard
   egress:
-  - ports: # to PuppetServer
-    - protocol: TCP
-      port: 8140
+  - ports: # to CloudNativePG
+    - port: 5432
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          cnpg.io/cluster: puppetdb-cnpg
   - ports: # to DNS
     - protocol: UDP
       port: 53
